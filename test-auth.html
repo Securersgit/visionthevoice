@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { margin: 5px; padding: 8px 15px; }
+    </style>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    
+    <div class="test-section">
+        <h2>Current Users in Storage</h2>
+        <div id="users-list"></div>
+        <button onclick="listUsers()">Refresh Users List</button>
+        <button onclick="clearUsers()">Clear All Users</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Navigation</h2>
+        <button onclick="window.location.href='/pages/signup.html'">Go to Sign Up</button>
+        <button onclick="window.location.href='/pages/login.html'">Go to Login</button>
+    </div>
+    
+    <script>
+        function listUsers() {
+            const users = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+            const usersList = document.getElementById('users-list');
+            
+            if (users.length === 0) {
+                usersList.innerHTML = '<p>No users found in storage.</p>';
+                return;
+            }
+            
+            let html = '<ul>';
+            users.forEach(user => {
+                html += `<li>${user.name} (${user.email}) - Created: ${new Date(user.createdAt).toLocaleString()}</li>`;
+            });
+            html += '</ul>';
+            
+            usersList.innerHTML = html;
+        }
+        
+        function clearUsers() {
+            localStorage.removeItem('userAccounts');
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            alert('All user data cleared from localStorage');
+            listUsers();
+        }
+        
+        // List users on page load
+        listUsers();
+    </script>
+</body>
+</html>

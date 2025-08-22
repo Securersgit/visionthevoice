@@ -10,6 +10,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/transitions.css">
 </head>
 <body>
 
@@ -25,28 +26,28 @@
         <a href="#pricing">Pricing</a>
         <a href="#testimonials">Stories</a>
         <a href="#help">Help</a>
-        <div class="nav-cta" id="phone">
+      <div class="nav-cta" id="phone">
           <a class="btn ghost" href="/pages/login.html">Sign in</a>
-          <a class="btn" href="/pages/Get-started.html">Get Started</a>
+          <a class="btn" href="/pages/signup.html">Sign up</a>
       </div>
       </div>
       <div class="nav-cta" id="desk">
         <a class="btn ghost" href="/pages/login.html">Sign in</a>
-        <a class="btn" href="/pages/Get-started.html">Get Started</a>
+        <a class="btn" href="/pages/signup.html">Sign up</a>
       </div>
     </nav>
   </div>
 </div>
 
 <!-- HERO -->
-<header class="hero">
+<header class="hero reveal">
   <div class="container hero-inner">
     <div class="hero-space">
       <span class="badge"><i class="fa-solid fa-podcast"></i> Creator Flow • Podcasts</span>
       <h1>Make your show the next big thing</h1>
       <p>Upload, distribute, monetize, and grow your audio or video podcast from one dashboard — built for creators who want control and clarity.</p>
       <div class="actions">
-        <a class="btn" href="#get-started">Get Started</a>
+        <a class="btn" href="/pages/Get-started.html">Get Started</a>
         <!-- <a class="btn ghost" href="#features">Explore features</a> -->
       </div>
       <!-- <div style="margin-top:18px">
@@ -66,11 +67,11 @@
 </header>
 
 <!-- FEATURES ROWS -->
-<section id="features" class="section">
+<section id="features" class="section reveal">
   <div class="container">
     <h2 class="section-title">All the tools to grow your show</h2>
 
-    <div class="row">
+    <div class="row reveal">
       <div class="card-img"><img src="/img/first.png" alt="Audience growth tools UI" class="first"></div>
       <div>
         <h3>Build a dedicated following</h3>
@@ -84,7 +85,7 @@
       </div>
     </div>
 
-    <div class="row" id="inverse">
+    <div class="row reveal" id="inverse">
       <div>
         <h3>Earn on your show</h3>
         <p class="lead">Monetize with sponsor marketplace, paid subscriptions, and tips — for both audio and video.</p>
@@ -100,7 +101,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row reveal">
       <div class="card-img"><img src="/img/last.jpg" alt="Show customization tools" class="last"></div>
       <div>
         <h3>Stand out with video & branding</h3>
@@ -116,10 +117,10 @@
 </section>
 
 <!-- BAND CALLOUT -->
-<section class="band section" id="get-started">
+<section class="band section reveal" id="get-started">
   <div class="container">
     <div style="display:flex;justify-content:center;margin-bottom:14px">
-      <a class="btn" href="#pricing">Start free — no card needed</a>
+      <a class="btn" href="/pages/Get-started.html">Start free — no card needed</a>
     </div>
     <div class="band-cards">
       <div class="tile">
@@ -192,7 +193,7 @@
 </section> -->
 
 <!-- FOOTER -->
-<footer id="help">
+<footer id="help" class="reveal">
   <div class="container footer-grid">
     <div class="news">
       <div class="brand" style="margin-bottom:8px">
@@ -246,5 +247,6 @@
 </footer>
 
 <script src="js/script.js"></script>
+<script src="js/navigation.js"></script>
 </body>
 </html>
