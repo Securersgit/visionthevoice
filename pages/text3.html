@@ -1599,7 +1599,7 @@
       }, 1000);
     }
 
-    // Save recording
+    // Save recording as publishable episode
     function saveRecordingToStorage() {
       if (audioChunks.length > 0) {
         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
@@ -1607,20 +1607,44 @@
         
         reader.onload = function() {
           const audioData = reader.result;
-          const recording = {
+          const duration = Date.now() - recordingStartTime;
+          
+          // Create a publishable episode object
+          const episodeData = {
             id: Date.now().toString(),
-            audioData: audioData,
-            duration: Date.now() - recordingStartTime,
-            timestamp: new Date().toISOString(),
-            title: `Recording ${new Date().toLocaleString()}`
+            title: `Live Recording - ${new Date().toLocaleString()}`,
+            description: 'This episode was recorded live using the VisionTheVoice recording feature.',
+            category: 'Technology', // Default category
+            tags: ['live-recording', 'podcast'],
+            explicitContent: false,
+            promotionalContent: false,
+            fileURL: audioData,
+            fileType: 'webm',
+            duration: Math.floor(duration / 1000), // Convert to seconds
+            artwork: '/img/voice.png',
+            publishedAt: new Date().toISOString()
           };
           
-          // Save to localStorage
+          // Save to localStorage for episodes
+          const currentEpisodes = JSON.parse(localStorage.getItem('publishedEpisodes') || '[]');
+          currentEpisodes.unshift(episodeData);
+          localStorage.setItem('publishedEpisodes', JSON.stringify(currentEpisodes));
+          
+          // Also save to a separate recordings list
           const savedRecordings = JSON.parse(localStorage.getItem('savedRecordings') || '[]');
-          savedRecordings.push(recording);
+          savedRecordings.push({
+            id: episodeData.id,
+            audioData: audioData,
+            duration: duration,
+            timestamp: new Date().toISOString(),
+            title: episodeData.title
+          });
           localStorage.setItem('savedRecordings', JSON.stringify(savedRecordings));
           
-          alert('Recording saved successfully!');
+          // Update episodes display
+          updateEpisodesDisplay();
+          
+          alert('Recording saved successfully and added to your episodes!');
           resetRecordingUI();
         };
         
