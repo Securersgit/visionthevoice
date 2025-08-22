@@ -1,0 +1,228 @@
+:root{
+  --bg:#0c0616;
+  --panel:#0f0a1b;
+  --ink:#e7e4ef;
+  --muted:#b6b0c5;
+  --brand:#7c4dff;
+  --brand-2:#9b6bff;
+  --cta:#8f66ff;
+  --pill:#201735;
+  --card:#141024;
+  --stroke:#201b33;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color:var(--ink);
+  background:linear-gradient(180deg,#0b0814 0%, #0d0817 30%, #0e0a1b 100%);
+}
+
+/*	Layout */
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.section{padding:64px 0; background-color: white;}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#fff;border:0;border-radius:999px;padding:12px 18px;
+  font-weight:700;cursor:pointer;text-decoration:none;box-shadow:var(--shadow);
+}
+.btn:focus{outline:3px solid #b79bff55;outline-offset:2px}
+.btn.ghost{
+  background:transparent;border:1px solid #7e65b4;color:#dddddd;box-shadow:none
+}
+.row .btn.ghost{
+  background:transparent;border:1px solid #2e023b;color:#2e023b;box-shadow:none
+}
+.badge{
+  display:inline-flex;gap:8px;align-items:center;
+  font-size:12px;color:#d5cfff;background:#1b1430;border:1px solid #2a2048;
+  border-radius:999px;padding:6px 10px;
+  width: fit-content;
+}
+
+/*	Header/Nav */
+.nav-wrap{
+  position:sticky;top:0;z-index:50;background:rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);border-bottom:1px solid #1b1530;
+}
+nav{display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px; text-decoration: none;color: white;}
+.brand img{width:70px;height:auto}
+.nav-links{display:flex;gap:22px;align-items:center;font-size: .9rem;}
+.nav-links a{color:white;text-decoration:none;font-weight:normal;}
+.nav-links a:hover{color:#fff}
+.nav-cta{display:flex;gap:10px;align-items:center}
+.hamburger{display:none;font-size:22px;background:transparent;border:0;color:#fff}
+
+/*	Hero */
+.hero {
+  padding:64px 0 48px;
+  overflow:hidden;
+  position: relative;
+  background-image: 
+    linear-gradient(
+      to right, 
+      rgb(0, 0, 0) 0%,   /* very dark on the left */
+      rgba(17, 1, 28, 0.811) 40%, /* medium in the middle */
+      rgba(0, 0, 0, 0.0) 100% /* fully exposed on the right */
+    ),
+    url(/img/heor-background2.jpg);
+  background-size: cover;
+  background-position: top;
+  color: #fff; /* readable text */
+  height: 90vh;
+}
+
+
+
+.hero-inner div.hero-space {
+  display: flex;
+  flex-direction: column;
+  /* gap: 15px; */
+}
+.hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;margin: 5%;}
+.hero h1{font-size:4rem;line-height:1.05;margin:8px 0 14px}
+.hero p{color:var(--muted);margin:0 0 22px;font-size:16px}
+.hero .actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero-visual{
+  border-radius:20px;overflow:hidden;border:1px solid #241a3b;
+  background:#120d21;box-shadow:var(--shadow)
+}
+.hero-visual img{display:block;width:100%;height:auto}
+
+/*	Social proof */
+.logos{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    opacity:.8;
+    /* background-color: white; */
+}
+.logos img{
+    height:26px;
+    filter:invert(9) brightness(.85);
+}
+
+/* feature is  */
+#features {
+    color: black;
+}
+
+.row h3 {
+    font-size: 3rem;
+    margin: 0;
+}
+.fa-solid {
+    color: rgb(244, 219, 255);
+}
+
+/*	Feature rows */
+.row{
+  margin:100px 0;
+}
+.card-img{
+  border-radius:18px;
+  width: 70%;
+  height: auto;
+}
+.card-img img{display:block;width:120%;height:auto}
+img.middle {width: 150%;border-radius: 20px;margin: 0 auto;}
+img.last {width: 90%;border-radius: 20px;margin: 0 auto;}
+h2.section-title{font-size:3rem;text-align: center;margin:0 0 50px;color: black;}
+p.lead{color:black;margin:0 0 16px;font-weight: 200; padding: 24px 0;}
+ul.feature-list{margin:14px 0 0;padding:0;list-style:none;font-weight: 200;}
+ul.feature-list li{display:flex;gap:10px;margin:10px 0;color:#000000}
+ul.feature-list li i{color:#a88bff}
+
+/*	Grid features */
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+.feature{
+  background: rgba(251, 244, 255, 0);border:1px solid var(--stroke);border-radius:14px;padding:16px;min-height:140px
+}
+.feature h4{margin:0 0 6px;font-size: 1.1rem;margin-bottom: 10px;}
+.feature p{margin:0;color:rgb(82, 82, 82);font-size: .8rem;}
+
+/*	Pricing teaser */
+.pricing{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px
+}
+.plan{
+  background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:18px;display:grid;gap:10px
+}
+.plan h4{margin:0}
+.price{font-size:28px;font-weight:800}
+.small{color:var(--muted);font-size:13px}
+
+/*	Callout band */
+.band{
+  background:radial-gradient(800px 250px at 50% -10%, #3b1f80 0%, transparent 60%), #0d0817;
+  border-top:1px solid #1a1430;border-bottom:1px solid #1a1430;
+}
+.band-cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:18px}
+.band .tile{
+  font-family: poppins;
+  background:#120c23;
+  border:2px solid #ffffff;
+  border-radius:18px;
+  padding:20px;
+  display:grid;
+  gap:8px;
+  margin: 50px 0;
+}
+.band .tile h3 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+.band .tile .btn {
+  background: white;
+  color: black;
+  width: fit-content;
+}
+.band .tile div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10px;
+}
+.band .tile div img {
+  width: 30px;
+  height: 30px;
+}
+.band .tile .small {
+  font-weight: 300;
+  font-size: large;
+  color: white;
+}
+
+/*	Testimonials */
+.testis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.quote{
+  background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:25px
+}
+.quote p{margin:0 0 20px; line-height: 25px;}
+.quote .by{color:#d9d4e6;font-weight:700}
+
+/*	Footer */
+footer{background-color: black; padding:36px 0;color:#cfc9de;border-top:1px solid #1b1530}
+.footer-grid{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:22px}
+footer a{color:#bdb5d3;text-decoration:none;}
+footer a:hover{color:#fff}
+.news form{display:flex;gap:10px;margin-top:10px}
+.news input{
+  flex:1;min-width:0;background:#0f0a1b;border:1px solid #2a2048;border-radius:999px;
+  color:#fff;padding:12px 14px
+}
+footer#help .container div ul li{
+  list-style-type: none;
+  margin: 20px 0;
+}
+
+
+#phone {
+  display: none;
+}
+
+
