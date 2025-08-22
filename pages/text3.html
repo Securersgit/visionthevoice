@@ -628,9 +628,47 @@
         left: 0;
       }
     }
+
+    /* Loader Styles */
+    .loader {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 50px;
+      height: 50px;
+      border: 5px solid #ddd;
+      border-top: 5px solid #006666; /* your accent color */
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+
+    .loader.hidden {
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Fade transition for sections */
+    .content-section {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .content-section.active {
+      opacity: 1;
+      visibility: visible;
+    }
   </style>
 </head>
 <body>
+  <div id="loader" class="loader hidden"></div>
+  
   <div class="dashboard">
     <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -1021,36 +1059,66 @@
       sidebarOverlay.classList.remove('active');
     });
 
-    // Tab functionality
+    // Tab functionality with loader and fade-in animation
     const menuLinks = document.querySelectorAll('.menu-link');
     const contentSections = document.querySelectorAll('.content-section');
+    const loader = document.getElementById('loader');
 
     menuLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         
+        const sectionId = link.getAttribute('data-section');
+        const targetSection = document.getElementById(sectionId);
+        
+        if (!targetSection || targetSection.classList.contains('active')) {
+          return; // Don't do anything if already on this section
+        }
+
+        // Show loader
+        loader.classList.remove('hidden');
+        
         // Remove active class from all links and sections
         menuLinks.forEach(l => l.classList.remove('active'));
-        contentSections.forEach(section => section.classList.remove('active'));
+        contentSections.forEach(section => {
+          section.classList.remove('active');
+          section.style.opacity = '0';
+          section.style.visibility = 'hidden';
+        });
         
         // Add active class to clicked link
         link.classList.add('active');
         
-        // Show corresponding content section
-        const sectionId = link.getAttribute('data-section');
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-          targetSection.classList.add('active');
-        }
+        // Simulate loading delay (you can replace this with actual async operations)
+        setTimeout(() => {
+          // Hide loader
+          loader.classList.add('hidden');
+          
+          // Show corresponding content section with fade-in animation
+          if (targetSection) {
+            targetSection.classList.add('active');
+            // Force reflow to ensure transition works
+            void targetSection.offsetWidth;
+            targetSection.style.opacity = '1';
+            targetSection.style.visibility = 'visible';
+          }
 
-        // Close sidebar on mobile after selection
-        if (window.innerWidth <= 768) {
-          sidebar.classList.remove('active');
-          hamburger.classList.remove('active');
-          sidebarOverlay.classList.remove('active');
-        }
+          // Close sidebar on mobile after selection
+          if (window.innerWidth <= 768) {
+            sidebar.classList.remove('active');
+            hamburger.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+          }
+        }, 800); // 800ms delay to show the loader
       });
     });
+
+    // Initialize active section with proper opacity
+    const activeSection = document.querySelector('.content-section.active');
+    if (activeSection) {
+      activeSection.style.opacity = '1';
+      activeSection.style.visibility = 'visible';
+    }
 
     // Recently Added Episodes Management
     let publishedEpisodes = JSON.parse(localStorage.getItem('publishedEpisodes') || '[]');
@@ -1214,5 +1282,4 @@
     });
   </script>
 </body>
-
 </html>
