@@ -653,6 +653,157 @@
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
+    /* Record Podcast Section Styles */
+    .record-section {
+      /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      padding: 30px;
+      border-radius: 12px;
+      margin: 20px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .record-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .record-button {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: none;
+      background: #ff4757;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    .record-button.recording {
+      background: #2ed573;
+      animation: pulse 1.5s infinite;
+      box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+    }
+
+    .record-button:hover {
+      transform: scale(1.05);
+    }
+
+    .record-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .recording-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .recording-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff4757;
+      animation: blink 1s infinite;
+    }
+
+    .recording-indicator.recording {
+      background: #2ed573;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.3; }
+    }
+
+    .recording-timer {
+      font-size: 24px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+    }
+
+    .audio-visualizer {
+      width: 100%;
+      height: 60px;
+      background: rgba(255, 0, 0, 0.525);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .visualizer-bars {
+      display: flex;
+      align-items: flex-end;
+      height: 100%;
+      gap: 2px;
+      padding: 10px;
+    }
+
+    .visualizer-bar {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 2px;
+      transition: height 0.1s ease;
+    }
+
+    .record-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .action-button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .save-button {
+      background: #2ed573;
+      color: white;
+    }
+
+    .save-button:hover {
+      background: #25b562;
+    }
+
+    .discard-button {
+      background: #ff4757;
+      color: white;
+    }
+
+    .discard-button:hover {
+      background: #e8414d;
+    }
+
+    .recording-preview {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .recording-preview audio {
+      width: 100%;
+    }
+
     /* Fade transition for sections */
     .content-section {
       opacity: 0;
@@ -682,6 +833,7 @@
       <button class="btn-new" onclick="window.location.href='/pages/upload.html'">+ New Episode</button>
       <nav class="menu">
         <a href="#" class="menu-link active" data-section="home">Home</a>
+        <a href="#" class="menu-link" data-section="record">Record</a>
         <a href="#" class="menu-link" data-section="analytics">Analytics</a>
         <a href="#" class="menu-link" data-section="episodes">Episodes</a>
         <a href="#" class="menu-link" data-section="comments">Comments</a>
@@ -704,6 +856,45 @@
           <img src="/img/avatar.jpeg" alt="User" class="avatar">
         </div>
       </header>
+
+      <!-- Record Podcast Section -->
+      <div class="content-section" id="record">
+        <h2>Record Podcast</h2>
+        <div class="record-section">
+          <div class="record-controls">
+            <button id="recordButton" class="record-button">🎤</button>
+            <div class="recording-status">
+              <div id="recordingIndicator" class="recording-indicator"></div>
+              <span id="recordingStatus">Ready to record</span>
+            </div>
+            <div id="recordingTimer" class="recording-timer">00:00:00</div>
+            
+            <div class="audio-visualizer">
+              <div class="visualizer-bars" id="visualizerBars">
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+              </div>
+            </div>
+            
+            <div class="record-actions" id="recordActions" style="display: none;">
+              <button class="action-button save-button" id="saveRecording">Save Recording</button>
+              <button class="action-button discard-button" id="discardRecording">Discard</button>
+            </div>
+            
+            <div class="recording-preview" id="recordingPreview" style="display: none;">
+              <audio id="audioPreview" controls></audio>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Home Section -->
       <div class="content-section active" id="home">
@@ -1280,6 +1471,195 @@
     window.addEventListener('episodePublished', function(e) {
       addPublishedEpisode(e.detail);
     });
+
+    // Record Podcast Functionality
+    const recordButton = document.getElementById('recordButton');
+    const recordingIndicator = document.getElementById('recordingIndicator');
+    const recordingStatus = document.getElementById('recordingStatus');
+    const recordingTimer = document.getElementById('recordingTimer');
+    const recordActions = document.getElementById('recordActions');
+    const saveRecording = document.getElementById('saveRecording');
+    const discardRecording = document.getElementById('discardRecording');
+    const audioPreview = document.getElementById('audioPreview');
+    const recordingPreview = document.getElementById('recordingPreview');
+    const visualizerBars = document.getElementById('visualizerBars');
+
+    let mediaRecorder;
+    let audioChunks = [];
+    let recordingStartTime;
+    let timerInterval;
+    let audioContext;
+    let analyser;
+    let visualizerInterval;
+
+    // Initialize audio visualizer bars
+    function initializeVisualizer() {
+      visualizerBars.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'visualizer-bar';
+        bar.style.height = '5px';
+        visualizerBars.appendChild(bar);
+      }
+    }
+
+    // Update visualizer with audio data
+    function updateVisualizer(dataArray) {
+      const bars = visualizerBars.querySelectorAll('.visualizer-bar');
+      const barCount = bars.length;
+      
+      for (let i = 0; i < barCount; i++) {
+        const value = dataArray[i] / 255;
+        const height = Math.max(5, value * 60);
+        bars[i].style.height = `${height}px`;
+      }
+    }
+
+    // Start recording
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // Set up audio context and analyser for visualizer
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        
+        // Start visualizer animation
+        visualizerInterval = setInterval(() => {
+          analyser.getByteFrequencyData(dataArray);
+          updateVisualizer(dataArray);
+        }, 100);
+
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          audioPreview.src = audioUrl;
+          recordingPreview.style.display = 'block';
+          recordActions.style.display = 'flex';
+        };
+
+        mediaRecorder.start();
+        recordingStartTime = Date.now();
+        startTimer();
+        
+        recordButton.classList.add('recording');
+        recordingIndicator.classList.add('recording');
+        recordingStatus.textContent = 'Recording...';
+        recordButton.textContent = '⏹️';
+        
+      } catch (error) {
+        console.error('Error starting recording:', error);
+        alert('Could not access microphone. Please check your permissions.');
+      }
+    }
+
+    // Stop recording
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        clearInterval(timerInterval);
+        clearInterval(visualizerInterval);
+        
+        recordButton.classList.remove('recording');
+        recordingIndicator.classList.remove('recording');
+        recordingStatus.textContent = 'Recording stopped';
+        recordButton.textContent = '🎤';
+        
+        // Stop all audio tracks
+        if (mediaRecorder.stream) {
+          mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        }
+      }
+    }
+
+    // Start timer
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        const elapsedTime = Date.now() - recordingStartTime;
+        const hours = Math.floor(elapsedTime / 3600000);
+        const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+        const seconds = Math.floor((elapsedTime % 60000) / 1000);
+        
+        recordingTimer.textContent = 
+          `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    // Save recording
+    function saveRecordingToStorage() {
+      if (audioChunks.length > 0) {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const reader = new FileReader();
+        
+        reader.onload = function() {
+          const audioData = reader.result;
+          const recording = {
+            id: Date.now().toString(),
+            audioData: audioData,
+            duration: Date.now() - recordingStartTime,
+            timestamp: new Date().toISOString(),
+            title: `Recording ${new Date().toLocaleString()}`
+          };
+          
+          // Save to localStorage
+          const savedRecordings = JSON.parse(localStorage.getItem('savedRecordings') || '[]');
+          savedRecordings.push(recording);
+          localStorage.setItem('savedRecordings', JSON.stringify(savedRecordings));
+          
+          alert('Recording saved successfully!');
+          resetRecordingUI();
+        };
+        
+        reader.readAsDataURL(audioBlob);
+      }
+    }
+
+    // Discard recording
+    function discardCurrentRecording() {
+      if (confirm('Are you sure you want to discard this recording?')) {
+        resetRecordingUI();
+      }
+    }
+
+    // Reset recording UI
+    function resetRecordingUI() {
+      audioChunks = [];
+      recordingTimer.textContent = '00:00:00';
+      recordingStatus.textContent = 'Ready to record';
+      recordActions.style.display = 'none';
+      recordingPreview.style.display = 'none';
+      audioPreview.src = '';
+      initializeVisualizer();
+    }
+
+    // Event listeners
+    recordButton.addEventListener('click', () => {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+    });
+
+    saveRecording.addEventListener('click', saveRecordingToStorage);
+    discardRecording.addEventListener('click', discardCurrentRecording);
+
+    // Initialize visualizer on page load
+    initializeVisualizer();
   </script>
 </body>
 </html>
