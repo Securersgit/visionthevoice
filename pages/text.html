@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #fafafa;
+      color: #222;
+      overflow-x: hidden;
+    }
+
+    .dashboard {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #fff;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    /* Hamburger Menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      margin-right: 15px;
+    }
+
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: #333;
+      margin: 3px 0;
+      transition: 0.3s;
+      display: block;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .sidebar .logo {
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar .logo h2 {
+        font-size: 1rem;
+        font-weight: bolder;
+    }
+    .sidebar .logo img {
+        width: 50px;
+    }
+
+    .user {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-new {
+      background: linear-gradient(to right, #A372FF, #5F14EA);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(95, 20, 234, 0.5);
+    }
+
+    .menu {
+      flex: 1;
+    }
+
+    .menu a {
+      display: block;
+      padding: 10px;
+      color: #444;
+      text-decoration: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .menu a.active,
+    .menu a:hover {
+      background: #f5f5f5;
+    }
+
+    .logout {
+      text-decoration: none;
+      color: #444;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .header .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-left: 10px;
+    }
+
+    /* Content Sections */
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    /* Cards */
+    .get-started {
+      display: flex;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .upload-box {
+        text-align: center;    
+        padding: 2rem 5rem !important;
+    }
+    .upload-box h2, .upload-box p {
+        margin-bottom: 10px;
+    }
+    .upload-box img {
+        width: 50px;
+        margin-bottom: 20px;
+    }
+
+    .upload-box,
+    .quick-guides {
+      flex: 1;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .btn-purple {
+      background: linear-gradient(to right, #A372FF, #5F14EA);
+      border: none;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(95, 20, 234, 0.5);
+    }
+
+    /* Overview */
+    .overview {
+      margin: 20px 0;
+    }
+
+    .overview-box {
+      display: flex;
+      align-items: stretch;
+      gap: 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      flex: 2;
+      height: 200px;
+    }
+
+    /* Stats */
+    .stats {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      font-size: 14px;
+      color: #333;
+    }
+
+    /* Creators */
+    .creator-cards {
+      display: flex;
+      gap: 20px;
+    }
+
+    .card {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      text-align: left;
+      padding: 15px;
+    }
+    .card .crop {
+        height: 50%;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .card img.last {
+        width: 130%;
+        margin-left: -20%;
+    }
+    .card h3 {
+        margin: 20px 0 5px;
+    }
+    .card p {
+        margin-bottom: 10px;
+    }
+
+    .card button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      background: #000;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+    .footer a {
+      margin-left: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    /* Content sections styling */
+    .section-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin: 20px 0;
+      line-height: 30px;
+    }
+
+    .episode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .episode-item {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      width: 100%;
+    }
+    .episode-item button {
+      padding: 10px 12px !important;
+    }
+
+    .comment-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      margin-bottom: 15px;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .get-started {
+        flex-direction: column;
+      }
+      
+      .creator-cards {
+        flex-direction: column;
+      }
+      
+      .card {
+        margin-bottom: 20px;
+      }
+      
+      .overview-box {
+        flex-direction: column;
+      }
+      
+      .chart-container {
+        height: 250px;
+        margin-bottom: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+      
+      .sidebar {
+        position: fixed;
+        left: -240px;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+        left: 0;
+      }
+      
+      .main {
+        width: 100%;
+        padding: 15px;
+      }
+      
+      .header {
+        justify-content: space-between;
+      }
+      
+      .upload-box {
+        padding: 1.5rem 2rem !important;
+      }
+      
+      .footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .footer .links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
+      
+      .footer a {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main {
+        padding: 10px;
+      }
+      
+      .upload-box {
+        padding: 1rem !important;
+      }
+      
+      .upload-box h2 {
+        font-size: 1.2rem;
+      }
+      
+      .card h3 {
+        font-size: 1.1rem;
+      }
+      
+      .card p {
+        font-size: 0.9rem;
+      }
+      
+      .stats p {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Overlay for mobile sidebar */
+    @media (max-width: 768px) {
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+      }
+      
+      .section-content {
+        padding: 20px;
+      }
+      
+      .sidebar-overlay.active {
+        display: block;
+      }
+      
+      .sidebar {
+        position: fixed;
+        left: -240px;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+        left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="/img/logo-nav.png" alt="">
+        <h2>VisionTheVoice</h2>
+      </div>
+      <button class="btn-new">+ New Episode</button>
+      <nav class="menu">
+        <a href="#" class="menu-link active" data-section="home">Home</a>
+        <a href="#" class="menu-link" data-section="analytics">Analytics</a>
+        <a href="#" class="menu-link" data-section="episodes">Episodes</a>
+        <a href="#" class="menu-link" data-section="comments">Comments</a>
+        <a href="#" class="menu-link" data-section="monetize">Monetize</a>
+        <a href="#" class="menu-link" data-section="settings">Settings</a>
+      </nav>
+      <a href="#" class="logout">Log out</a>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <header class="header">
+        <button class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="user">
+          <span class="bell">🔔</span>
+          <img src="/img/avatar.jpeg" alt="User" class="avatar">
+        </div>
+      </header>
+
+      <!-- Home Section -->
+      <div class="content-section active" id="home">
+        <h2>Get Started</h2>
+        <section class="get-started">
+          <div class="upload-box">
+            <img src="/img/plus.png" alt="add button">
+            <h2>Upload a new episode</h2>
+            <p>To get data and insights, upload and publish your first episode.</p>
+            <button class="btn-purple">+ Add an episode</button>
+          </div>
+          <div class="quick-guides">
+            <h3>Quick guides</h3>
+            <a href="#">Tour your show on VisionTheVoice</a>
+            <a href="#">Learn about audio and video</a>
+          </div>
+        </section>
+
+        <!-- Recently Added Episodes Section -->
+        <section class="recent-episodes">
+          <h2>Recently Added Episodes</h2><br>
+          <div id="recent-episodes-container" class="recent-episodes-container">
+            <!-- Episodes will be loaded dynamically here -->
+            <div class="no-episodes-message">
+              <p>No episodes published yet. Upload your first episode to see it here!</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="overview">
+          <h2>Overview</h2><br>
+          <div class="overview-box">
+            <!-- Chart -->
+            <div class="chart-container">
+              <canvas id="overviewChart"></canvas>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+              <p><strong>Plays:</strong> --</p>
+              <p><strong>Consumption hours:</strong> --</p>
+              <p><strong>Followers:</strong> --</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="creators">
+          <h2>New from Creators on VisionTheVoice</h2><br>
+          <div class="creator-cards">
+            <div class="card">
+              <div class="crop">
+                <img src="/img/DUDU.jpg" alt="">
+              </div>
+              <h3>The Dudu Experience</h3>
+              <p>Discover the challenges, strategies, and pivotal moments that helped tech influencers manage their career</p>
+              <button>Check it out</button>
+            </div>
+            <div class="card">
+              <div class="crop">
+                <img src="/img/GEHGEH.jpg" alt="">
+              </div>
+              <h3>The Financial Expert</h3>
+              <p>Discover the challenges, strategies, and pivotal moments that helped Nigerian youths manage their financial life.</p>
+              <button>Check it out</button>
+            </div>
+            <div class="card">
+              <div class="crop">
+                <img src="/img/PODMAN.jpg" alt="" class="last">
+              </div>
+              <h3>Why do you create?</h3>
+              <p>From producing and distributing to growing and monetizing your podcast, discover everything you need to know about how to...</p>
+              <button>Check it out</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Analytics Section -->
+      <div class="content-section" id="analytics">
+        <h2>Analytics</h2>
+        <div class="section-content">
+          <h3>Performance Overview</h3>
+          <p>Track your podcast's performance with detailed analytics and insights.</p>
+          
+          <div class="overview-box">
+            <div class="chart-container">
+              <canvas id="analyticsChart"></canvas>
+            </div>
+            <div class="stats">
+              <p><strong>Total Downloads:</strong> 12,543</p>
+              <p><strong>Monthly Growth:</strong> +15.3%</p>
+              <p><strong>Average Listen Time:</strong> 24 min</p>
+              <p><strong>Top Location:</strong> Lagos, Nigeria</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Episodes Section -->
+      <div class="content-section" id="episodes">
+        <h2>Episodes</h2>
+        <div class="section-content">
+          <h3>Manage Your Episodes</h3>
+          <button class="btn-purple">+ Add New Episode</button>
+          
+          <div class="episode-grid">
+            <div class="episode-item">
+              <h4>Episode 1: Getting Started</h4>
+              <p>Published: Jan 15, 2025</p>
+              <p>Duration: 32 minutes</p>
+              <p>Downloads: 1,234</p>
+              <button style="margin-top: 10px; padding: 5px 10px; border: none; background: #A372FF; color: white; border-radius: 4px;">Edit</button>
+            </div>
+            <div class="episode-item">
+              <h4>Episode 2: Building Your Audience</h4>
+              <p>Published: Jan 22, 2025</p>
+              <p>Duration: 28 minutes</p>
+              <p>Downloads: 987</p>
+              <button style="margin-top: 10px; padding: 5px 10px; border: none; background: #A372FF; color: white; border-radius: 4px;">Edit</button>
+            </div>
+            <div class="episode-item">
+              <h4>Episode 3: Monetization Strategies</h4>
+              <p>Draft - Not Published</p>
+              <p>Duration: 35 minutes</p>
+              <button style="margin-top: 10px; padding: 5px 10px; border: none; background: #4a4a4a; color: white; border-radius: 4px;">Publish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="content-section" id="comments">
+        <h2>Comments</h2>
+        <div class="section-content">
+          <h3>Listener Feedback</h3>
+          <p>Engage with your audience through comments and reviews.</p>
+          
+          <div class="comment-item">
+            <strong>@john_doe</strong>
+            <p>"Great episode on financial planning! Really helpful tips."</p>
+            <small>Episode 2 - 2 days ago</small>
+            <button style="margin-top: 10px; padding: 5px 10px; border: none; background: #A372FF; color: white; border-radius: 4px;">Reply</button>
+          </div>
+          
+          <div class="comment-item">
+            <strong>@sarah_m</strong>
+            <p>"Love the content! When's the next episode coming out?"</p>
+            <small>Episode 1 - 1 week ago</small>
+            <button style="margin-top: 10px; padding: 5px 10px; border: none; background: #A372FF; color: white; border-radius: 4px;">Reply</button>
+          </div>
+          
+          <div class="comment-item">
+            <strong>@mike_tech</strong>
+            <p>"The audio quality could be better, but great insights!"</p>
+            <small>Episode 1 - 2 weeks ago</small>
+            <button style="margin-top: 10px; padding: 5px 10px; border: none; background: #A372FF; color: white; border-radius: 4px;">Reply</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monetize Section -->
+      <div class="content-section" id="monetize">
+        <h2>Monetize</h2>
+        <div class="section-content">
+          <h3>Revenue Opportunities</h3>
+          <p>Explore different ways to monetize your podcast content.</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6;">
+              <h4>Sponsorships</h4>
+              <p>Connect with brands for sponsored content opportunities.</p>
+              <p><strong>Potential Revenue:</strong> $500-2000/episode</p>
+              <button class="btn-purple">Learn More</button>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6;">
+              <h4>Premium Content</h4>
+              <p>Offer exclusive episodes to paid subscribers.</p>
+              <p><strong>Monthly Revenue:</strong> $50-500/month</p>
+              <button class="btn-purple">Set Up</button>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6;">
+              <h4>Merchandise</h4>
+              <p>Sell branded merchandise to your audience.</p>
+              <p><strong>Profit Margin:</strong> 40-60%</p>
+              <button class="btn-purple">Create Store</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div class="content-section" id="settings">
+        <h2>Settings</h2>
+        <div class="section-content">
+          <h3>Account & Podcast Settings</h3>
+          
+          <div class="setting-item">
+            <div>
+              <strong>Podcast Name</strong>
+              <p>VisionTheVoice Podcast</p>
+            </div>
+            <button style="padding: 5px 15px; border: none; background: #6c757d; color: white; border-radius: 4px;">Edit</button>
+          </div>
+          
+          <div class="setting-item">
+            <div>
+              <strong>Email Notifications</strong>
+              <p>Receive updates about your podcast</p>
+            </div>
+            <input type="checkbox" checked style="transform: scale(1.5);">
+          </div>
+          
+          <div class="setting-item">
+            <div>
+              <strong>Auto-publish Episodes</strong>
+              <p>Automatically publish uploaded episodes</p>
+            </div>
+            <input type="checkbox" style="transform: scale(1.5);">
+          </div>
+          
+          <div class="setting-item">
+            <div>
+              <strong>Privacy Settings</strong>
+              <p>Control who can see your podcast</p>
+            </div>
+            <select style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px;">
+              <option>Public</option>
+              <option>Private</option>
+              <option>Unlisted</option>
+            </select>
+          </div>
+          
+          <div class="setting-item">
+            <div>
+              <strong>Account Management</strong>
+              <p>Manage your account settings</p>
+            </div>
+            <button style="padding: 5px 15px; border: none; background: #dc3545; color: white; border-radius: 4px;">Delete Account</button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>© 2025 VisionTheVoice</p>
+        <div class="links">
+          <a href="#">Legal</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Initialize charts
+    const ctx = document.getElementById("overviewChart").getContext("2d");
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Day 1", "Day 5", "Day 10", "Day 15", "Day 20", "Day 25", "Day 30"],
+        datasets: [{
+          label: "Plays",
+          data: [10, 25, 20, 40, 30, 50, 60],
+          fill: true,
+          backgroundColor: "rgba(0, 200, 200, 0.2)",
+          borderColor: "#008080",
+          borderWidth: 2,
+          tension: 0.4,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: "#555", font: { size: 12 } }
+          },
+          y: {
+            grid: { color: "#eee" },
+            ticks: { color: "#555", font: { size: 12 } }
+          }
+        }
+      }
+    });
+
+    // Analytics chart
+    const analyticsCtx = document.getElementById("analyticsChart");
+    if (analyticsCtx) {
+      new Chart(analyticsCtx, {
+        type: "bar",
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          datasets: [{
+            label: "Downloads",
+            data: [1200, 1900, 3000, 2500, 2200, 3000],
+            backgroundColor: "rgba(95, 20, 234, 0.8)",
+            borderColor: "#5F14EA",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: "#555", font: { size: 12 } }
+            },
+            y: {
+              grid: { color: "#eee" },
+              ticks: { color: "#555", font: { size: 12 } }
+            }
+          }
+        }
+      });
+    }
+
+    // Hamburger menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+    
+    // Close sidebar when clicking on overlay
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      hamburger.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Tab functionality
+    const menuLinks = document.querySelectorAll('.menu-link');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    menuLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remove active class from all links and sections
+        menuLinks.forEach(l => l.classList.remove('active'));
+        contentSections.forEach(section => section.classList.remove('active'));
+        
+        // Add active class to clicked link
+        link.classList.add('active');
+        
+        // Show corresponding content section
+        const sectionId = link.getAttribute('data-section');
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+
+        // Close sidebar on mobile after selection
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('active');
+          hamburger.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        }
+      });
+    });
+
+    // Load and display recently added episodes
+    function loadRecentEpisodes() {
+      const container = document.getElementById('recent-episodes-container');
+      const episodes = JSON.parse(localStorage.getItem('publishedEpisodes') || '[]');
+      
+      // Clear container
+      container.innerHTML = '';
+      
+      if (episodes.length === 0) {
+        container.innerHTML = `
+          <div class="no-episodes-message">
+            <p>No episodes published yet. Upload your first episode to see it here!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Show only the 3 most recent episodes
+      const recentEpisodes = episodes.slice(0, 3);
+      
+      recentEpisodes.forEach(episode => {
+        const episodeElement = document.createElement('div');
+        episodeElement.className = 'recent-episode';
+        episodeElement.innerHTML = `
+          <div class="recent-episode-main">
+            <div class="recent-episode-left">
+              <img src="${episode.artwork}" alt="${episode.title}" class="recent-episode-thumbnail">
+            </div>
+            <div class="recent-episode-right">
+              <h3 class="recent-episode-title">${episode.title}</h3>
+              <div class="recent-episode-meta">
+                <span class="recent-episode-category">${episode.category || 'Uncategorized'}</span>
+                <span class="recent-episode-date">${formatDate(episode.publishDate)}</span>
+              </div>
+              <p class="recent-episode-description">${episode.description || 'No description provided.'}</p>
+              ${episode.tags.length > 0 ? `
+                <div class="recent-episode-tags">
+                  ${episode.tags.map(tag => `<span class="recent-episode-tag">${tag}</span>`).join('')}
+                </div>
+              ` : ''}
+              ${episode.explicitContent || episode.promotionalContent ? `
+                <div class="recent-episode-warnings">
+                  ${episode.explicitContent ? '<span class="warning-badge">EXPLICIT</span>' : ''}
+                  ${episode.promotionalContent ? '<span class="promo-badge">CONTAINS ADS</span>' : ''}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(episodeElement);
+      });
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // Load episodes when page loads
+    document.addEventListener('DOMContentLoaded', loadRecentEpisodes);
+  </script>
+</body>
+</html>

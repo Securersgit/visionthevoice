@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Episode</title>
+  <link rel="stylesheet" href="/css/upload.css">
+  <link rel="stylesheet" href="/css/transitions.css">
+</head>
+<body>
+
+<header>
+  <h2>Create Episode</h2>
+  <nav class="steps">
+    <a href="#" class="active">Upload</a>
+    <span>&gt;</span>
+    <a href="#">Details</a>
+    <span>&gt;</span>
+    <a href="#">Preview</a>
+  </nav>
+  <button class="close">✕</button>
+</header>
+
+<main>
+  <!-- Step 1: Upload -->
+  <section class="step active" id="step-upload">
+    <div class="upload-info">
+      <h3>Upload audio or video</h3>
+      <p>Learn more about our <a href="#">audio</a> and <a href="#">video</a> guidelines.</p>
+      <p>You need to secure the rights to any third-party content used in your episode. To learn more, check out our Copyright Resource Hub.</p>
+      <p>Want to get your music on VisionTheVoice? Check out our guide.</p>
+    </div>
+    <div class="upload-box">
+      <div class="drop-area">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'/%3E%3Cpolyline points='14,2 14,8 20,8'/%3E%3Cline x1='12' y1='18' x2='12' y2='12'/%3E%3Cpolyline points='9,15 12,12 15,15'/%3E%3C/svg%3E" alt="Upload icon">
+        <p>Drag and drop or</p>
+        <button class="btn" type="button">Select a file</button><br>
+        <small>mp3, m4a, wav, mpg, mp4, mov</small>
+        <div class="upload-progress" style="display: none;">
+          <div class="upload-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2: Details -->
+  <section class="step" id="step-details">
+    <div class="details-form">
+      <h3>Episode Info</h3>
+      <label>Title *</label>
+      <input type="text" placeholder="Give your episode a name" required>
+      
+      <label>Description *</label>
+      <textarea placeholder="What else do you want your audience to know?" maxlength="500" required></textarea>
+
+      <label>Category *</label>
+      <select class="category-select" required>
+        <option value="">Select a category</option>
+        <option value="arts">Arts</option>
+        <option value="business">Business</option>
+        <option value="comedy">Comedy</option>
+        <option value="education">Education</option>
+        <option value="health">Health & Fitness</option>
+        <option value="religon">Religion & Spirituality</option>
+        <option value="history">History</option>
+        <option value="music">Music</option>
+        <option value="news">News</option>
+        <option value="science">Science</option>
+        <option value="society">Society & Culture</option>
+        <option value="sports">Sports</option>
+        <option value="technology">Technology</option>
+        <option value="true-crime">True Crime</option>
+      </select>
+
+      <label>Tags</label>
+      <div class="tags-container">
+        <input type="text" class="tags-input" placeholder="Add tags (press Enter)">
+      </div>
+      <small>Add relevant tags to help people discover your episode</small>
+
+      <label>Episode Artwork</label>
+      <div class="image-upload">
+        <div class="image-preview">
+          <div class="image-preview-placeholder">
+            <div>📷</div>
+            <div>Add image</div>
+          </div>
+        </div>
+        <div>
+          <p><strong>Episode artwork guidelines:</strong></p>
+          <ul style="font-size: 0.8rem; color: #666; margin: 0; padding-left: 1rem;">
+            <li>Minimum 1400x1400 pixels</li>
+            <li>Square aspect ratio (1:1)</li>
+            <li>JPG or PNG format</li>
+            <li>Maximum 5MB file size</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>Content checks</h4>
+      <label class="toggle">
+        <div class="toggle-text">
+          <h2>Explicit content *</h2> 
+          <p>Help fans of all ages avoid unwanted explicit content.</p>
+        </div>
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+
+      <label class="toggle">
+        <div class="toggle-text">
+          <h2>Promotional content *</h2>
+          <p>Does your episode contain promotional content such as ads, product placement, sponsorship, or endorsement?</p>
+        </div>
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="file-preview">
+      <button class="btn" type="button">Next</button>
+    </div>
+  </section>
+
+  <!-- Step 3: Preview -->
+  <section class="step" id="step-preview">
+    <div class="publish">
+      <h3>Review and Publish</h3>
+      <div class="box">
+        <h4>Schedule</h4>
+        <div>
+          <label><input type="radio" name="publish" value="now" checked> Now</label>
+          <label><input type="radio" name="publish" value="schedule"> Schedule</label>
+        </div>
+        <div class="schedule-options">
+          <div class="datetime-container">
+            <input type="date" id="publish-date">
+            <input type="time" id="publish-time">
+          </div>
+        </div>
+      </div>
+      <div class="box" id="preview-details">
+        <h4>Episode Preview</h4>
+        <p style="color: #666; font-size: 0.9rem;">This is how your episode will appear to listeners:</p>
+        
+        <div class="main">
+          <div class="left">
+            <img id="preview-thumbnail-img" src="https://i.pinimg.com/1200x/cb/e9/96/cbe996b7f522c685915b29d3fdd3691d.jpg" alt="Podcast thumbnail" />
+          </div>
+          
+          <div class="right">
+            <h2 id="preview-title">Name of podcast</h2>
+            <div class="preview-audio-player" id="preview-player" style="display: none;">
+              <!-- Audio player will be inserted here -->
+            </div>
+            <p><strong>Category:</strong> <span id="preview-category">sports</span></p>
+            <p class="tags"><strong>Tags:</strong> <span id="preview-tags-container"></span></p>
+          </div>
+        </div>
+        <small><strong>Description</strong></small>
+        <div class="episode-description" id="preview-description" style="margin-top: 1rem;">
+          No description provided.
+        </div>
+        
+        <div class="content-warnings" id="preview-warnings" style="display: none; margin-top: 1rem;">
+          <!-- Content warnings will be inserted here -->
+        </div>
+      </div>
+    </div>
+    <div class="file-preview">
+      <button class="btn" type="button">Publish</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 VisionTheVoice</p>
+  <nav>
+    <a href="#">Legal</a>
+    <a href="#">Privacy</a>
+    <a href="#">Cookies</a>
+  </nav>
+</footer>
+
+<script src="/js/upload.js"></script>
+<script src="/js/navigation.js"></script>
+
+</body>
+</html>

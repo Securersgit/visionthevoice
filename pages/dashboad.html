@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/transitions.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="/img/logo-nav.png" alt="">
+        <h2>VisionTheVoice</h2>
+        </div>
+      <button class="btn-new">+ New Episode</button>
+      <nav class="menu">
+        <a href="#" class="active">Home</a>
+        <a href="#">Analytics</a>
+        <a href="#">Episodes</a>
+        <a href="#">Comments</a>
+        <a href="#">Monetize</a>
+        <a href="#">Settings</a>
+      </nav>
+      <a href="#" class="logout">Log out</a>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <header class="header">
+        <button class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="user">
+          <span class="bell">🔔</span>
+          <img src="/img/avatar.jpeg" alt="User" class="avatar">
+        </div>
+      </header>
+
+      <h2>Get Started</h2>
+      <section class="get-started">
+        <div class="upload-box">
+            <img src="/img/plus.png" alt="add button">
+          <h2>Upload a new episode</h2>
+          <p>To get data and insights, upload and publish your first episode.</p>
+          <button class="btn-purple">+ Add an episode</button>
+        </div>
+        <div class="quick-guides">
+          <h3>Quick guides</h3>
+          <a href="#">Tour your show on VisionTheVoice</a>
+          <a href="#">Learn about audio and video</a>
+        </div>
+      </section>
+
+      <!-- <section class="overview">
+        <h2>Overview</h2>
+        <div class="overview-box">
+          <div class="chart">[Chart]</div>
+          <div class="stats">
+            <p>Plays: --</p>
+            <p>Consumption hours: --</p>
+            <p>Followers: --</p>
+          </div>
+        </div>
+      </section> -->
+
+      <section class="overview">
+          <h2>Overview</h2><br>
+  <div class="overview-box">
+    <!-- Chart -->
+    <div class="chart-container">
+      <canvas id="overviewChart"></canvas>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <p><strong>Plays:</strong> --</p>
+      <p><strong>Consumption hours:</strong> --</p>
+      <p><strong>Followers:</strong> --</p>
+    </div>
+  </div>
+</section>
+
+      <section class="creators">
+        <h2>New from Creators on VisionTheVoice</h2><br>
+        <div class="creator-cards">
+          <div class="card">
+            <div class="crop">
+                <img src="/img/DUDU.jpg" alt="">
+            </div>
+            <h3>The Dudu Experience</h3>
+            <p>Discover the challenges, strategies, and pivotal moments that helped tech influencers manage their career</p>
+            <button>Check it out</button>
+          </div>
+          <div class="card">
+            <div class="crop">
+                <img src="/img/GEHGEH.jpg" alt="">
+            </div>
+            <h3>The Financial Expert</h3>
+            <p>Discover the challenges, strategies, and pivotal moments that helped Nigerian youths manage their financial life.</p>
+            <button>Check it out</button>
+          </div>
+          <div class="card">
+            <div class="crop">
+                <img src="/img/PODMAN.jpg" alt="" class="last">
+            </div>
+            <h3>Why do you create?</h3>
+            <p>From producing and distributing to growing and monetizing your podcast, discover everything you need to know about how to...</p>
+            <button>Check it out</button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>© 2025 VisionTheVoice</p>
+        <div class="links">
+          <a href="#">Legal</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+  const ctx = document.getElementById("overviewChart").getContext("2d");
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: ["Day 1", "Day 5", "Day 10", "Day 15", "Day 20", "Day 25", "Day 30"],
+      datasets: [{
+        label: "Plays",
+        data: [10, 25, 20, 40, 30, 50, 60],
+        fill: true,
+        backgroundColor: "rgba(0, 200, 200, 0.2)",
+        borderColor: "#008080",
+        borderWidth: 2,
+        tension: 0.4, /* smooth curve */
+        pointRadius: 0 /* no dots */
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: "#555", font: { size: 12 } }
+        },
+        y: {
+          grid: { color: "#eee" },
+          ticks: { color: "#555", font: { size: 12 } }
+        }
+      }
+    }
+  });
+
+  // Hamburger menu functionality
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  
+  hamburger.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+    hamburger.classList.toggle('active');
+    sidebarOverlay.classList.toggle('active');
+  });
+  
+  // Close sidebar when clicking on overlay
+  sidebarOverlay.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    hamburger.classList.remove('active');
+    sidebarOverlay.classList.remove('active');
+  });
+</script>
+<script src="/js/navigation.js"></script>
+</body>
+</html>

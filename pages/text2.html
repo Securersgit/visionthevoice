@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Episode</title>
+  <style>
+    body {
+      font-family: 'poppins', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      border-bottom: 1px solid #ddd;
+      background: white;
+    }
+
+    .steps {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 14px;
+    }
+
+    .steps a {
+      text-decoration: none;
+      color: #777;
+    }
+
+    .steps a.active {
+      color: #5F14EA;
+      font-weight: bold;
+    }
+
+    .close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #777;
+    }
+
+    main {
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .step {
+      display: none;
+      width: 80%;
+      max-width: 1000px;
+      gap: 2rem;
+    }
+
+    .step.active {
+      display: flex;
+    }
+
+    .upload-info {
+      flex: 1;
+    }
+    
+    .upload-info h3 {
+        font-size: 2rem;
+    }
+    
+    .upload-info p {
+        font-size: .9rem;
+    }
+
+    .upload-info a {
+      color: #5F14EA;
+    }
+
+    .upload-box, .details-form, .publish {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .drop-area {
+      border: 2px dashed #aaa;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 12px;
+      line-height: 2.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .drop-area.dragover {
+      border-color: #5F14EA;
+      background-color: #f0f0ff;
+    }
+
+    .file-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .file-card {
+      background: #000;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      background: linear-gradient(to right, #A372FF, #5F14EA);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(95,20,234,0.6);
+    }
+
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .details-form {
+        display: flex;
+        flex-direction: column;
+        max-width: 70%;
+    }
+    
+    .details-form label {
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    
+    .details-form input, .details-form textarea {
+        padding: 10px 12px;
+        border-radius: 8px;
+        margin: 10px 0 30px;
+        border: 1px solid #ddd;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .details-form textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .details-form h4 {
+        font-size: 1.5rem;
+        margin: 2rem 0 1rem 0;
+    }
+    
+    .details-form p {
+        font-size: .8rem;
+        margin: 0;
+    }
+
+    /* Toggle styles */
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      background: #1e1e1e;
+      color: #fff;
+    }
+
+    .toggle-text {
+        width: 90%;
+    }
+
+    .toggle-text h2 {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .toggle-text p {
+      font-size: 13px;
+      margin: 4px 0 0;
+      color: #aaa;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .slider {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: #444;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .toggle input:checked + .slider {
+      background: linear-gradient(to right, #A372FF, #5F14EA);
+    }
+
+    .toggle input:checked + .slider::before {
+      transform: translateX(24px);
+    }
+
+    /* Audio player styles */
+    .audio-player {
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .audio-player audio {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .audio-metadata {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* Progress bar styles */
+    .upload-progress {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .upload-progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, #A372FF, #5F14EA);
+      transition: width 0.3s ease;
+    }
+
+    /* Image upload styles */
+    .image-upload {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin: 1rem 0;
+    }
+
+    .image-preview {
+      width: 100px;
+      height: 100px;
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9f9f9;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-preview-placeholder {
+      text-align: center;
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    /* Tags input styles */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+      min-height: 40px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.5rem;
+      background: white;
+    }
+
+    .tag {
+      background: linear-gradient(to right, #A372FF, #5F14EA);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .tag-remove {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tags-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      min-width: 100px;
+      padding: 0.25rem;
+    }
+
+    /* Date time picker styles */
+    .datetime-container {
+      display: flex;
+      gap: 1rem;
+      margin: 0.5rem 0;
+    }
+
+    .datetime-container input {
+      flex: 1;
+      margin: 0;
+    }
+
+    .schedule-options {
+      display: none;
+    }
+
+    .schedule-options.active {
+      display: block;
+    }
+
+    /* Category select styles */
+    .category-select {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin: 10px 0 30px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Preview page */
+    .publish {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .publish h3 {
+      font-size: 2rem;
+      margin: 0;
+    }
+    
+    .publish p {
+      font-size: .9rem;
+    }
+    
+    .publish p strong {
+      font-size: 1.1rem;
+    }
+    
+    .publish .box {
+      border: 1px solid black;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    
+    .publish .box div {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* New preview layout styles */
+    .main {
+      display: flex;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .main .left img {
+      width: 200px;
+      border-radius: 8px;
+    }
+
+    p.tags span {
+      background-color: blue;
+      padding: 5px 10px;
+      border-radius: 100px;
+      color: white;
+      margin-right: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .preview-audio-player {
+      margin: 1rem 0;
+      width: 100%;
+    }
+
+    .preview-audio-player audio {
+      width: 100%;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+      margin-top: 2rem;
+    }
+
+    footer nav {
+      display: flex;
+      gap: 1rem;
+    }
+
+    footer a {
+      color: #777;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Create Episode</h2>
+  <nav class="steps">
+    <a href="#" class="active">Upload</a>
+    <span>&gt;</span>
+    <a href="#">Details</a>
+    <span>&gt;</span>
+    <a href="#">Preview</a>
+  </nav>
+  <button class="close">✕</button>
+</header>
+
+<main>
+  <!-- Step 1: Upload -->
+  <section class="step active" id="step-upload">
+    <div class="upload-info">
+      <h3>Upload audio or video</h3>
+      <p>Learn more about our <a href="#">audio</a> and <a href="#">video</a> guidelines.</p>
+      <p>You need to secure the rights to any third-party content used in your episode. To learn more, check out our Copyright Resource Hub.</p>
+      <p>Want to get your music on VisionTheVoice? Check out our guide.</p>
+    </div>
+    <div class="upload-box">
+      <div class="drop-area">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'/%3E%3Cpolyline points='14,2 14,8 20,8'/%3E%3Cline x1='12' y1='18' x2='12' y2='12'/%3E%3Cpolyline points='9,15 12,12 15,15'/%3E%3C/svg%3E" alt="Upload icon">
+        <p>Drag and drop or</p>
+        <button class="btn" type="button">Select a file</button><br>
+        <small>mp3, m4a, wav, mpg, mp4, mov</small>
+        <div class="upload-progress" style="display: none;">
+          <div class="upload-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2: Details -->
+  <section class="step" id="step-details">
+    <div class="details-form">
+      <h3>Episode Info</h3>
+      <label>Title *</label>
+      <input type="text" placeholder="Give your episode a name" required>
+      
+      <label>Description *</label>
+      <textarea placeholder="What else do you want your audience to know?" maxlength="500" required></textarea>
+
+      <label>Category *</label>
+      <select class="category-select" required>
+        <option value="">Select a category</option>
+        <option value="arts">Arts</option>
+        <option value="business">Business</option>
+        <option value="comedy">Comedy</option>
+        <option value="education">Education</option>
+        <option value="health">Health & Fitness</option>
+        <option value="history">History</option>
+        <option value="music">Music</option>
+        <option value="news">News</option>
+        <option value="science">Science</option>
+        <option value="society">Society & Culture</option>
+        <option value="sports">Sports</option>
+        <option value="technology">Technology</option>
+        <option value="true-crime">True Crime</option>
+      </select>
+
+      <label>Tags</label>
+      <div class="tags-container">
+        <input type="text" class="tags-input" placeholder="Add tags (press Enter)">
+      </div>
+      <small>Add relevant tags to help people discover your episode</small>
+
+      <label>Episode Artwork</label>
+      <div class="image-upload">
+        <div class="image-preview">
+          <div class="image-preview-placeholder">
+            <div>📷</div>
+            <div>Add image</div>
+          </div>
+        </div>
+        <div>
+          <p><strong>Episode artwork guidelines:</strong></p>
+          <ul style="font-size: 0.8rem; color: #666; margin: 0; padding-left: 1rem;">
+            <li>Minimum 1400x1400 pixels</li>
+            <li>Square aspect ratio (1:1)</li>
+            <li>JPG or PNG format</li>
+            <li>Maximum 5MB file size</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>Content checks</h4>
+      <label class="toggle">
+        <div class="toggle-text">
+          <h2>Explicit content *</h2> 
+          <p>Help fans of all ages avoid unwanted explicit content.</p>
+        </div>
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+
+      <label class="toggle">
+        <div class="toggle-text">
+          <h2>Promotional content *</h2>
+          <p>Does your episode contain promotional content such as ads, product placement, sponsorship, or endorsement?</p>
+        </div>
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="file-preview">
+      <button class="btn" type="button">Next</button>
+    </div>
+  </section>
+
+  <!-- Step 3: Preview -->
+  <section class="step" id="step-preview">
+    <div class="publish">
+      <h3>Review and Publish</h3>
+      <div class="box">
+        <h4>Schedule</h4>
+        <div>
+          <label><input type="radio" name="publish" value="now" checked> Now</label>
+          <label><input type="radio" name="publish" value="schedule"> Schedule</label>
+        </div>
+        <div class="schedule-options">
+          <div class="datetime-container">
+            <input type="date" id="publish-date">
+            <input type="time" id="publish-time">
+          </div>
+        </div>
+      </div>
+      <div class="box" id="preview-details">
+        <h4>Episode Preview</h4>
+        <p style="color: #666; font-size: 0.9rem;">This is how your episode will appear to listeners:</p>
+        
+        <div class="main">
+          <div class="left">
+            <img id="preview-thumbnail-img" src="https://i.pinimg.com/1200x/cb/e9/96/cbe996b7f522c685915b29d3fdd3691d.jpg" alt="Podcast thumbnail" />
+          </div>
+          
+          <div class="right">
+            <h2 id="preview-title">Name of podcast</h2>
+            <div class="preview-audio-player" id="preview-player" style="display: none;">
+              <!-- Audio player will be inserted here -->
+            </div>
+            <p><strong>Category:</strong> <span id="preview-category">sports</span></p>
+            <p class="tags"><strong>Tags:</strong> <span id="preview-tags-container"></span></p>
+          </div>
+        </div>
+        
+        <div class="episode-description" id="preview-description" style="margin-top: 1rem;">
+          No description provided.
+        </div>
+        
+        <div class="content-warnings" id="preview-warnings" style="display: none; margin-top: 1rem;">
+          <!-- Content warnings will be inserted here -->
+        </div>
+      </div>
+    </div>
+    <div class="file-preview">
+      <button class="btn" type="button">Publish</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 VisionTheVoice</p>
+  <nav>
+    <a href="#">Legal</a>
+    <a href="#">Privacy</a>
+    <a href="#">Cookies</a>
+  </nav>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Global state
+    const formData = {
+        file: null,
+        title: '',
+        description: '',
+        category: '',
+        tags: [],
+        artwork: null,
+        explicitContent: false,
+        promotionalContent: false,
+        publishNow: true,
+        publishDate: '',
+        publishTime: ''
+    };
+
+    // DOM Elements
+    const dropArea = document.querySelector('.drop-area');
+    const selectBtn = document.querySelector('#step-upload .btn');
+    const closeBtn = document.querySelector('.close');
+    const steps = document.querySelectorAll('.step');
+    const navLinks = document.querySelectorAll('.steps a');
+    const titleInput = document.querySelector('#step-details input[type="text"]');
+    const descriptionTextarea = document.querySelector('#step-details textarea');
+    const categorySelect = document.querySelector('.category-select');
+    const tagsInput = document.querySelector('.tags-input');
+    const tagsContainer = document.querySelector('.tags-container');
+    const imagePreview = document.querySelector('.image-preview');
+    const explicitToggle = document.querySelector('#step-details .toggle input[type="checkbox"]');
+    const promotionalToggle = document.querySelectorAll('#step-details .toggle input[type="checkbox"]')[1];
+    const nextBtn = document.querySelector('#step-details .btn');
+    const publishBtn = document.querySelector('#step-preview .btn');
+    const publishRadios = document.querySelectorAll('input[name="publish"]');
+    const scheduleOptions = document.querySelector('.schedule-options');
+    const publishDateInput = document.querySelector('#publish-date');
+    const publishTimeInput = document.querySelector('#publish-time');
+
+    // Create hidden file inputs
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.mp3,.m4a,.wav,.mpg,.mp4,.mov';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+
+    const artworkInput = document.createElement('input');
+    artworkInput.type = 'file';
+    artworkInput.accept = 'image/jpeg,image/jpg,image/png';
+    artworkInput.style.display = 'none';
+    document.body.appendChild(artworkInput);
+
+    // Initially disable the select button until we set up handlers
+    selectBtn.disabled = true;
+
+    // File upload setup
+    function setupFileUpload() {
+        // Re-enable button after setup
+        selectBtn.disabled = false;
+        
+        // Select file button
+        selectBtn.addEventListener('click', handleSelectClick);
+
+        // File input change
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => {
+                dropArea.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => {
+                dropArea.classList.remove('dragover');
+            }, false);
+        });
+
+        dropArea.addEventListener('drop', handleDrop, false);
+    }
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function handleDrop(e) {
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    }
+
+    function handleFileSelect(e) {
+        const files = e.target.files;
+        handleFiles(files);
+    }
+
+    function handleFiles(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            
+            // Validate file type
+            const validTypes = ['mp3', 'm4a', 'wav', 'mpg', 'mp4', 'mov'];
+            const fileType = file.name.split('.').pop().toLowerCase();
+            
+            if (!validTypes.includes(fileType)) {
+                alert('Please select a valid audio or video file');
+                return;
+            }
+            
+            // Show upload progress
+            showUploadProgress();
+            
+            // Simulate file processing
+            simulateFileProcessing(file);
+        }
+    }
+
+    function showUploadProgress() {
+        const progressContainer = document.querySelector('.upload-progress');
+        const progressBar = document.querySelector('.upload-progress-bar');
+        
+        progressContainer.style.display = 'block';
+        progressBar.style.width = '0%';
+        
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 30;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 500);
+            }
+            progressBar.style.width = progress + '%';
+        }, 200);
+    }
+
+    function simulateFileProcessing(file) {
+        setTimeout(() => {
+            formData.file = file;
+            updateFileDisplay(file);
+            
+            // Remove the original event listener and replace with next step function
+            selectBtn.removeEventListener('click', handleSelectClick);
+            selectBtn.textContent = 'Next';
+            selectBtn.addEventListener('click', handleNextClick);
+        }, 2000); // 2 second processing simulation
+    }
+
+    function handleSelectClick(e) {
+        e.preventDefault();
+        fileInput.click();
+    }
+
+    function handleNextClick(e) {
+        e.preventDefault();
+        goToStep(1);
+    }
+
+    function updateFileDisplay(file) {
+        // Remove existing file card if any
+        const existingCard = document.querySelector('#step-upload .file-card');
+        if (existingCard) {
+            existingCard.remove();
+        }
+        
+        // Create new file card with audio preview and metadata
+        const fileCard = document.createElement('div');
+        fileCard.className = 'file-card';
+        
+        const fileName = file.name;
+        const fileType = fileName.split('.').pop().toUpperCase();
+        const fileIcon = getFileIcon(fileType);
+        const fileSize = formatFileSize(file.size);
+        
+        // Create audio player if it's an audio file
+        let audioPlayerHTML = '';
+        if (['MP3', 'M4A', 'WAV'].includes(fileType)) {
+            const audioURL = URL.createObjectURL(file);
+            audioPlayerHTML = `
+                <div class="audio-player">
+                    <audio controls>
+                        <source src="${audioURL}" type="audio/${fileType.toLowerCase()}">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <div class="audio-metadata">
+                        <span>Duration: <span id="audio-duration">Loading...</span></span>
+                        <span>Bitrate: <span id="audio-bitrate">Analyzing...</span></span>
+                        <span>Size: ${fileSize}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        fileCard.innerHTML = `
+            ${fileIcon} ${fileName}<br>
+            <small>${fileSize}</small>
+            ${audioPlayerHTML}
+        `;
+        
+        // Insert after drop area
+        dropArea.parentNode.insertBefore(fileCard, dropArea.nextSibling);
+        
+        // Get audio metadata
+        if (['MP3', 'M4A', 'WAV'].includes(fileType)) {
+            getAudioMetadata(file);
+        }
+    }
+
+    function getAudioMetadata(file) {
+        const audioURL = URL.createObjectURL(file);
+        const audio = new Audio();
+        
+        audio.addEventListener('loadedmetadata', function() {
+            const duration = formatDuration(audio.duration);
+            const durationElement = document.getElementById('audio-duration');
+            if (durationElement) {
+                durationElement.textContent = duration;
+            }
+            
+            // Estimate bitrate (rough calculation)
+            const bitrate = Math.round((file.size * 8) / audio.duration / 1000);
+            const bitrateElement = document.getElementById('audio-bitrate');
+            if (bitrateElement) {
+                bitrateElement.textContent = bitrate + ' kbps';
+            }
+        });
+        
+        audio.src = audioURL;
+    }
+
+    function formatDuration(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    function getFileIcon(fileType) {
+        const icons = {
+            'MP3': '🎵', 'M4A': '🎵', 'WAV': '🎵',
+            'MPG': '🎥', 'MP4': '🎥', 'MOV': '🎥'
+        };
+        return icons[fileType] || '📄';
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Step navigation
+    function goToStep(stepIndex) {
+        steps.forEach((step, index) => {
+            step.classList.toggle('active', index === stepIndex);
+        });
+        navLinks.forEach((link, index) => {
+            link.classList.toggle('active', index === stepIndex);
+        });
+    }
+
+    // Details form handling
+    function setupDetailsForm() {
+        // Tags input functionality
+        setupTagsInput();
+        
+        // Image upload functionality
+        setupImageUpload();
+        
+        // Schedule radio buttons
+        setupScheduleOptions();
+        
+        nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Save form data
+            formData.title = titleInput.value.trim();
+            formData.description = descriptionTextarea.value.trim();
+            formData.category = categorySelect.value;
+            formData.explicitContent = explicitToggle ? explicitToggle.checked : false;
+            formData.promotionalContent = promotionalToggle ? promotionalToggle.checked : false;
+            
+            // Update preview
+            updatePreview();
+            
+            // Go to preview step
+            goToStep(2);
+        });
+    }
+
+    function setupTagsInput() {
+        tagsInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && tagsInput.value.trim()) {
+                e.preventDefault();
+                addTag(tagsInput.value.trim());
+                tagsInput.value = '';
+            }
+        });
+    }
+
+    function addTag(tagText) {
+        if (formData.tags.includes(tagText) || formData.tags.length >= 10) return;
+        
+        formData.tags.push(tagText);
+        
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.innerHTML = `
+            ${tagText}
+            <span class="tag-remove" onclick="removeTag('${tagText}')">&times;</span>
+        `;
+        
+        tagsContainer.insertBefore(tag, tagsInput);
+    }
+
+    function removeTag(tagText) {
+        formData.tags = formData.tags.filter(tag => tag !== tagText);
+        updateTagsDisplay();
+    }
+
+    function updateTagsDisplay() {
+        const existingTags = tagsContainer.querySelectorAll('.tag');
+        existingTags.forEach(tag => tag.remove());
+        
+        formData.tags.forEach(tagText => {
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `
+                ${tagText}
+                <span class="tag-remove" onclick="removeTag('${tagText}')">&times;</span>
+            `;
+            tagsContainer.insertBefore(tag, tagsInput);
+        });
+    }
+
+    function setupImageUpload() {
+        imagePreview.addEventListener('click', () => {
+            artworkInput.click();
+        });
+        
+        artworkInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate image
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image must be smaller than 5MB');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    formData.artwork = file;
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Episode artwork">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    function setupScheduleOptions() {
+        publishRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'schedule') {
+                    scheduleOptions.classList.add('active');
+                    // Set default to tomorrow
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    publishDateInput.value = tomorrow.toISOString().split('T')[0];
+                    publishTimeInput.value = '09:00';
+                } else {
+                    scheduleOptions.classList.remove('active');
+                }
+            });
+        });
+    }
+
+    function validateForm() {
+        const title = titleInput.value.trim();
+        const description = descriptionTextarea.value.trim();
+        const category = categorySelect.value;
+        return title && description && category;
+    }
+
+    function updatePreview() {
+        // Update episode title
+        const titleElement = document.getElementById('preview-title');
+        titleElement.textContent = formData.title || 'Name of podcast';
+        
+        // Update episode description
+        const descriptionElement = document.getElementById('preview-description');
+        descriptionElement.textContent = formData.description || 'No description provided.';
+        
+        // Update category
+        const categoryElement = document.getElementById('preview-category');
+        const categoryText = categorySelect.value ? categorySelect.options[categorySelect.selectedIndex].text : 'Uncategorized';
+        categoryElement.textContent = categoryText;
+        
+        // Update tags
+        updatePreviewTags();
+        
+        // Update thumbnail
+        updatePreviewThumbnail();
+        
+        // Update audio player and metadata
+        updatePreviewPlayer();
+        
+        // Update content warnings
+        updatePreviewWarnings();
+        
+        // Update file card in preview sidebar (keep existing functionality)
+        updatePreviewFileCard();
+    }
+
+    function updatePreviewTags() {
+        const tagsContainer = document.getElementById('preview-tags-container');
+        tagsContainer.innerHTML = '';
+        
+        if (formData.tags.length > 0) {
+            formData.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.textContent = tag;
+                tagsContainer.appendChild(tagElement);
+            });
+        }
+    }
+
+    function updatePreviewThumbnail() {
+        const thumbnailElement = document.getElementById('preview-thumbnail-img');
+        
+        if (formData.artwork) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                thumbnailElement.src = e.target.result;
+            };
+            reader.readAsDataURL(formData.artwork);
+        } else {
+            thumbnailElement.src = 'https://i.pinimg.com/1200x/cb/e9/96/cbe996b7f522c685915b29d3fdd3691d.jpg';
+        }
+    }
+
+    function updatePreviewPlayer() {
+        const playerContainer = document.getElementById('preview-player');
+        
+        if (formData.file) {
+            const fileName = formData.file.name;
+            const fileType = fileName.split('.').pop().toUpperCase();
+            
+            // Show and populate audio player for audio files
+            if (['MP3', 'M4A', 'WAV'].includes(fileType)) {
+                playerContainer.style.display = 'block';
+                const audioURL = URL.createObjectURL(formData.file);
+                
+                playerContainer.innerHTML = `
+                    <audio controls id="preview-audio">
+                        <source src="${audioURL}" type="audio/${fileType.toLowerCase()}">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <div class="player-info">
+                        <span>🎵 ${fileName}</span>
+                        <span id="preview-audio-duration">Duration: Loading...</span>
+                    </div>
+                `;
+                
+                // Get audio duration
+                const audioElement = document.getElementById('preview-audio');
+                audioElement.addEventListener('loadedmetadata', function() {
+                    const duration = formatDuration(audioElement.duration);
+                    document.getElementById('preview-audio-duration').textContent = `Duration: ${duration}`;
+                });
+            } else {
+                // For video files, just show basic info
+                playerContainer.style.display = 'block';
+                playerContainer.innerHTML = `
+                    <div class="player-info">
+                        <span>🎥 ${fileName}</span>
+                        <span>Video file - Preview not available</span>
+                    </div>
+                `;
+            }
+        } else {
+            playerContainer.style.display = 'none';
+        }
+    }
+
+    function updatePreviewWarnings() {
+        const warningsContainer = document.getElementById('preview-warnings');
+        warningsContainer.innerHTML = '';
+        
+        let hasWarnings = false;
+        
+        if (formData.explicitContent) {
+            const explicitBadge = document.createElement('span');
+            explicitBadge.className = 'warning-badge';
+            explicitBadge.textContent = 'EXPLICIT';
+            warningsContainer.appendChild(explicitBadge);
+            hasWarnings = true;
+        }
+        
+        if (formData.promotionalContent) {
+            const promoBadge = document.createElement('span');
+            promoBadge.className = 'promo-badge';
+            promoBadge.textContent = 'CONTAINS ADS';
+            warningsContainer.appendChild(promoBadge);
+            hasWarnings = true;
+        }
+        
+        warningsContainer.style.display = hasWarnings ? 'block' : 'none';
+    }
+
+    // Update file card in preview
+    function updatePreviewFileCard() {
+        const existingCard = document.querySelector('#step-preview .file-card');
+        if (existingCard) {
+            existingCard.remove();
+        }
+
+        if (formData.file) {
+            const fileCard = document.createElement('div');
+            fileCard.className = 'file-card';
+            
+            const fileName = formData.file.name;
+            const fileType = fileName.split('.').pop().toUpperCase();
+            const fileIcon = getFileIcon(fileType);
+            
+            fileCard.innerHTML = `${fileIcon} ${fileName}<br><small>${formData.title}</small>`;
+            
+            const previewSection = document.querySelector('#step-preview .file-preview');
+            previewSection.insertBefore(fileCard, publishBtn);
+        }
+    }
+
+    // Publish handling
+    function setupPublish() {
+        publishBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Get publish timing
+            const selectedRadio = document.querySelector('input[name="publish"]:checked');
+            formData.publishNow = selectedRadio.value === 'now';
+            
+            if (!formData.publishNow) {
+                formData.publishDate = publishDateInput.value;
+                formData.publishTime = publishTimeInput.value;
+            }
+            
+            console.log('Publishing episode:', formData);
+            alert('Episode published successfully!');
+            
+            // Reset and go back to start
+            resetForm();
+            goToStep(0);
+        });
+    }
+
+    function resetForm() {
+        // Reset form data
+        Object.assign(formData, {
+            file: null,
+            title: '',
+            description: '',
+            category: '',
+            tags: [],
+            artwork: null,
+            explicitContent: false,
+            promotionalContent: false,
+            publishNow: true,
+            publishDate: '',
+            publishTime: ''
+        });
+        
+        // Reset form inputs
+        if (titleInput) titleInput.value = '';
+        if (descriptionTextarea) descriptionTextarea.value = '';
+        if (categorySelect) categorySelect.value = '';
+        if (explicitToggle) explicitToggle.checked = false;
+        if (promotionalToggle) promotionalToggle.checked = false;
+        if (publishRadios[0]) publishRadios[0].checked = true;
+        if (scheduleOptions) scheduleOptions.classList.remove('active');
+        if (publishDateInput) publishDateInput.value = '';
+        if (publishTimeInput) publishTimeInput.value = '';
+        fileInput.value = '';
+        artworkInput.value = '';
+        
+        // Reset tags display
+        updateTagsDisplay();
+        
+        // Reset image preview
+        imagePreview.innerHTML = `
+            <div class="image-preview-placeholder">
+                <div>📷</div>
+                <div>Add image</div>
+            </div>
+        `;
+        
+        // Reset button
+        selectBtn.textContent = 'Select a file';
+        selectBtn.removeEventListener('click', handleNextClick);
+        selectBtn.addEventListener('click', handleSelectClick);
+        
+        // Remove file cards
+        document.querySelectorAll('.file-card').forEach(card => card.remove());
+        
+        // Hide progress bar
+        const progressContainer = document.querySelector('.upload-progress');
+        if (progressContainer) {
+            progressContainer.style.display = 'none';
+        }
+    }
+
+    // Make removeTag function global so it can be called from onclick
+    window.removeTag = removeTag;
+
+    // Close button
+    function setupCloseButton() {
+        closeBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to close? Any unsaved changes will be lost.')) {
+                resetForm();
+                goToStep(0);
+            }
+        });
+    }
+
+    // Initialize everything
+    function init() {
+        setupFileUpload();
+        setupDetailsForm();
+        setupPublish();
+        setupCloseButton();
+    }
+
+    init();
+});
+</script>
+
+</body>
+</html>
